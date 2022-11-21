@@ -30,23 +30,9 @@ fun menuPrincipal() {
     }
 }
 
-fun finalizarCompra() {
-    if (itensComanda.isEmpty()) {
-        print("Deseja mesmo cancelar? (S/N) ")
-        if (readLine().toString() == "S") {
-            exitProcess(0)
-        } else {
-            menuPrincipal()
-        }
-    } else {
-        finalizacaoDaCompra()
-    }
-}
-
-fun menuPaes(): MutableList<String> {
+fun menuPaes() {
     val listaPaes = listOf("Pão francês", "Pão de milho")
     val precoPaes = listOf(1.0, 2.0)
-    var reciboPaes: MutableList<String> = mutableListOf()
 
     do {
         println("Escolha o item")
@@ -60,19 +46,17 @@ fun menuPaes(): MutableList<String> {
         if (escolha != 0) {
             print("Qual a quantidade? ")
             val quantidade = readLine()?.toInt() ?: 0
-            reciboPaes = selecionaQuantidadeDoProduto(listaPaes[escolha - 1], quantidade, precoPaes[escolha - 1])
+            selecionaQuantidadeDoProduto(listaPaes[escolha - 1], quantidade, precoPaes[escolha - 1])
         } else {
             menuPrincipal()
         }
     } while (escolha != 0)
 
-    return reciboPaes
 }
 
-fun menuDoces(): MutableList<String> {
+fun menuDoces(){
     val menuDoces = listOf("Doce francês", "Doce de milho")
     val precoDoces = listOf(10.00, 20.00)
-    var recibo: MutableList<String> = mutableListOf()
 
     do {
         println("Escolha o item")
@@ -86,13 +70,11 @@ fun menuDoces(): MutableList<String> {
         if (escolha != 0) {
             print("Qual a quantidade? ")
             val quantidade = readLine()?.toInt() ?: 0
-            recibo = selecionaQuantidadeDoProduto(menuDoces[escolha - 1], quantidade, precoDoces[escolha - 1])
+            selecionaQuantidadeDoProduto(menuDoces[escolha - 1], quantidade, precoDoces[escolha - 1])
         } else {
             menuPrincipal()
         }
     } while (escolha != 0)
-
-    return recibo
 }
 
 fun selecionaQuantidadeDoProduto(produto: String, quantidade: Int, precoUnitario: Double): MutableList<String> {
@@ -109,6 +91,19 @@ fun itemComanda(
     valorUnitario: Double,
     subTotal: Double,
 ): String = "\n${itensComanda.size.inc()}$LINHA$produto$LINHA$quantidade${LINHA}R$$valorUnitario${LINHA}R$$subTotal"
+
+fun finalizarCompra() {
+    if (itensComanda.isEmpty()) {
+        print("Deseja mesmo cancelar? (S/N) ")
+        if (readLine().toString() == "S") {
+            exitProcess(0)
+        } else {
+            menuPrincipal()
+        }
+    } else {
+        finalizacaoDaCompra()
+    }
+}
 
 fun finalizacaoDaCompra() {
     println("Se possui cupom de desconto, informe aqui: ")
