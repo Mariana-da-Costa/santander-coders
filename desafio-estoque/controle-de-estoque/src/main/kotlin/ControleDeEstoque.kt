@@ -4,41 +4,48 @@ var listaDeProdutos = mutableListOf<Triple<Int, String, Int>>()
 const val opcoesDoMenu = """
     1 - ADICIONAR ITEM
     2 - EDITAR ITEM
-    3 - EXIBIR ITNS EM ESTOQUE
+    3 - EXIBIR ITENS EM ESTOQUE
     4 - EXIBIR TODOS OS ITENS
     0 - FECHAR SISTEMA
 """
 
 fun main() {
     println("*********** Bem vindo ao seu Gerenciador de Estoque =) ***********")
-    println("O que você deseja fazer hoje?\n$opcoesDoMenu")
     menu()
 }
 
-fun menu(){
-    try{
-        when (readLine()?.toInt()) {
+fun menu() {
+    println("\nDigite uma opção\n$opcoesDoMenu")
+    val entradaOpcao = readLine()?.toInt() ?: 0
+    try {
+        when (entradaOpcao) {
             1 -> adicionarItem()
             2 -> editarItem()
             3 -> exibirProdutosEmEstoque()
             4 -> exibirListaDeProdutos()
             0 -> fecharPrograma()
         }
-    }catch (e:Exception){
+    } catch (e: Exception) {
         println("Opção incorreta. Digite uma das seguintes opções: $opcoesDoMenu")
         menu()
     }
 }
 
 fun adicionarItem() {
+    val qtd: Int
     val index = listaDeProdutos.size.inc()
     print("Informe o nome do produto: ")
-    val produto = readLine().toString()
-    print("Informe a quantidade: ")
-    val qtd = readLine()?.toInt() ?: 0
-    val item = item(index, produto, qtd)
-    listaDeProdutos.add(Triple(index, item, qtd))
-    menu()
+    try {
+        val produto = readLine().toString()
+        print("Informe a quantidade: ")
+        qtd = readLine()?.toInt() ?: 0
+        val item = item(index, produto, qtd)
+        listaDeProdutos.add(Triple(index, item, qtd))
+        menu()
+    } catch (e: Exception) {
+        println("!!! A quantidade precisa ser um número maior ou igual a zero !!! \n")
+        adicionarItem()
+    }
 }
 
 fun editarItem() {
@@ -61,29 +68,36 @@ fun editarItem() {
             println("Você digitou incorretamente")
             editarItem()
         } catch (e: NumberFormatException) {
-            println("Você digitou ma letra, digite o número do ID")
+            println("Você digitou uma letra, digite o número do ID")
             editarItem()
         }
     } else {
-        println("A lista está vbazia =(")
+        println("A lista está vazia =(")
         menu()
     }
 }
 
 fun exibirProdutosEmEstoque() {
-    val produtosEmEstoque = listaDeProdutos.filter { it.third > 0 }
-
-    println("ID | Peça | Quantidade")
-    produtosEmEstoque.forEach() {
-        println(it.second)
+    if (listaDeProdutos.isNotEmpty()) {
+        val produtosEmEstoque = listaDeProdutos.filter { it.third > 0 }
+        println("ID | Peça | Quantidade")
+        produtosEmEstoque.forEach {
+            println(it.second)
+        }
+    } else {
+        println("A lista está vazia =(")
     }
     menu()
 }
 
 fun exibirListaDeProdutos() {
-    println("ID | Peça | Quantidade")
-    listaDeProdutos.forEach {
-        println(it.second)
+    if (listaDeProdutos.isNotEmpty()) {
+        println("ID | Peça | Quantidade")
+        listaDeProdutos.forEach {
+            println(it.second)
+        }
+    } else {
+        println("A lista está vazia =(")
     }
     menu()
 }
@@ -93,4 +107,4 @@ fun fecharPrograma() {
     exitProcess(0)
 }
 
-fun item(id: Int, peca:String, qtd:Int): String = "#$id | $peca | $qtd"
+fun item(id: Int, peca: String, qtd: Int): String = "#$id | $peca | $qtd"

@@ -25,14 +25,15 @@ fun menuPrincipal() {
     when (opcaoMenuPrincipal) {
         1 -> menuPaes()
         2 -> menuDoces()
+        3 -> menuSalgados()
         0 -> finalizarCompra()
         else -> "Opcão inválida"
     }
 }
 
 fun menuPaes() {
-    val listaPaes = listOf("Pão francês", "Pão de milho")
-    val precoPaes = listOf(1.0, 2.0)
+    val listaPaes = listOf("Pão francês", "Pão e Leite", "Pão de milho")
+    val precoPaes = listOf(1.0, 2.0, 3.0)
 
     do {
         println("Escolha o item")
@@ -51,17 +52,43 @@ fun menuPaes() {
             menuPrincipal()
         }
     } while (escolha != 0)
-
 }
 
-fun menuDoces(){
-    val menuDoces = listOf("Doce francês", "Doce de milho")
-    val precoDoces = listOf(10.00, 20.00)
+fun menuDoces() {
+    val menuDoces = listOf("Bolo", "Doce de milho", "Torta de Nozes")
+    val precoDoces = listOf(10.0, 12.0, 15.0)
+    try {
+        do {
+            println("Escolha o item")
+            for (i in menuDoces.indices) {
+                println("${i + 1} - ${menuDoces[i]}......R$ ${precoDoces[i]}")
+            }
+            println("0.........Voltar")
+
+            val escolha: Int = readLine()?.toInt() ?: 0
+
+            if (escolha != 0) {
+                print("Qual a quantidade? ")
+                val quantidade = readLine()?.toInt() ?: 0
+                selecionaQuantidadeDoProduto(menuDoces[escolha - 1], quantidade, precoDoces[escolha - 1])
+            } else {
+                menuPrincipal()
+            }
+        } while (escolha != 0)
+    } catch (e: Exception) {
+        println("Ocorreu um erro inesperado, por favor tente novamente.")
+        menuDoces()
+    }
+}
+
+fun menuSalgados() {
+    val listaSalgados = listOf("Coxinha", "Misto quente", "Empadinha")
+    val precoSalgados = listOf(4.0, 8.0, 3.0)
 
     do {
         println("Escolha o item")
-        for (i in menuDoces.indices) {
-            println("${i + 1} - ${menuDoces[i]}......R$ ${precoDoces[i]}")
+        for (i in listaSalgados.indices) {
+            println("${i + 1} - ${listaSalgados[i]}......R$ ${precoSalgados[i]}")
         }
         println("0.........Voltar")
 
@@ -70,7 +97,7 @@ fun menuDoces(){
         if (escolha != 0) {
             print("Qual a quantidade? ")
             val quantidade = readLine()?.toInt() ?: 0
-            selecionaQuantidadeDoProduto(menuDoces[escolha - 1], quantidade, precoDoces[escolha - 1])
+            selecionaQuantidadeDoProduto(listaSalgados[escolha - 1], quantidade, precoSalgados[escolha - 1])
         } else {
             menuPrincipal()
         }
