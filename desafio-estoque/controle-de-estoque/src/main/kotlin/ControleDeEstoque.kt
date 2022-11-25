@@ -1,3 +1,4 @@
+import javax.naming.LimitExceededException
 import kotlin.system.exitProcess
 
 var listaDeProdutos = mutableListOf<Triple<Int, String, Int>>()
@@ -25,6 +26,8 @@ fun menu() {
             4 -> exibirListaDeProdutos()
             0 -> fecharPrograma()
         }
+    } catch (e: LimitExceededException) {
+        print(e.message)
     } catch (e: Exception) {
         println("Opção incorreta. Digite uma das seguintes opções: $opcoesDoMenu")
         menu()
@@ -32,19 +35,23 @@ fun menu() {
 }
 
 fun adicionarItem() {
-    val qtd: Int
-    val index = listaDeProdutos.size.inc()
-    print("Informe o nome do produto: ")
-    try {
-        val produto = readLine().toString()
-        print("Informe a quantidade: ")
-        qtd = readLine()?.toInt() ?: 0
-        val item = item(index, produto, qtd)
-        listaDeProdutos.add(Triple(index, item, qtd))
-        menu()
-    } catch (e: Exception) {
-        println("!!! A quantidade precisa ser um número maior ou igual a zero !!! \n")
-        adicionarItem()
+    if (listaDeProdutos.size == 999) {
+        throw LimitExceededException("LimiteEstoqueMaxException")
+    } else {
+        val qtd: Int
+        val index = listaDeProdutos.size.inc()
+        print("Informe o nome do produto: ")
+        try {
+            val produto = readLine().toString()
+            print("Informe a quantidade: ")
+            qtd = readLine()?.toInt() ?: 0
+            val item = item(index, produto, qtd)
+            listaDeProdutos.add(Triple(index, item, qtd))
+            menu()
+        } catch (e: Exception) {
+            println("!!! A quantidade precisa ser um número maior ou igual a zero !!! \n")
+            adicionarItem()
+        }
     }
 }
 
