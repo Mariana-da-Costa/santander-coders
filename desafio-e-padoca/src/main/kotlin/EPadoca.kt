@@ -90,7 +90,7 @@ fun itemComanda(
     quantidade: Int,
     valorUnitario: Double,
     subTotal: Double,
-): String = "\n${itensComanda.size.inc()}$LINHA$produto$LINHA$quantidade${LINHA}R$$valorUnitario${LINHA}R$$subTotal"
+): String = "\n${itensComanda.size.inc()}$LINHA$produto$LINHA$quantidade${LINHA}R$$valorUnitario${LINHA}R$$subTotal\n"
 
 fun finalizarCompra() {
     if (itensComanda.isEmpty()) {
@@ -124,7 +124,9 @@ fun impressaoDaComanda() {
     println(DIVISOR)
     println("item.......Produto..........Qtd.......Valor...........Total")
     println(DIVISOR)
-    print(itensComanda)
+    itensComanda.forEach {
+        print(it)
+    }
     println("\n" + DIVISOR)
     println("Total =============================================>R$ $total")
     println("=====================VOLTE SEMPRE ^-^======================")
