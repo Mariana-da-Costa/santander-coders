@@ -1,160 +1,131 @@
 import kotlin.system.exitProcess
 
-private const val LINHA = "........"
-private const val DIVISOR = "==========================================================="
-val itensComanda: MutableList<String> = mutableListOf()
-var total: Double = 0.00
+class EPadoca {
+    private val itensComanda: MutableList<String> = mutableListOf()
+    private var total: Double = 0.00
 
-fun main() {
-    println("Bem vindo a E-Padoca!")
-    menuPrincipal()
-}
+    fun menuPrincipal() {
+        val menuPrincipal = ItemDoMenu(listOf("Pães", "Doces", "Salgados"))
+        println("Selecione uma opcão")
 
-fun menuPrincipal() {
-    val menuPrincipal = listOf("Pães", "Doces")
-
-    println("Selecione uma opcão")
-
-    for (i in menuPrincipal.indices) {
-        println("${i + 1}.........${menuPrincipal[i]}")
-    }
-    println("0.........Finalizar")
-
-    var opcaoMenuPrincipal: Int = readLine()?.toInt() ?: 0
-
-    when (opcaoMenuPrincipal) {
-        1 -> menuPaes()
-        2 -> menuDoces()
-        3 -> menuSalgados()
-        0 -> finalizarCompra()
-        else -> "Opcão inválida"
-    }
-}
-
-fun menuPaes() {
-    val listaPaes = listOf("Pão francês", "Pão e Leite", "Pão de milho")
-    val precoPaes = listOf(1.0, 2.0, 3.0)
-
-    do {
-        println("Escolha o item")
-        for (i in listaPaes.indices) {
-            println("${i + 1} - ${listaPaes[i]}......R$ ${precoPaes[i]}")
+        for (i in menuPrincipal.nome.indices) {
+            println("${i + 1}.........${menuPrincipal.nome[i]}")
         }
-        println("0.........Voltar")
+        println("0.........Finalizar")
 
-        val escolha: Int = readLine()?.toInt() ?: 0
-
-        if (escolha != 0) {
-            print("Qual a quantidade? ")
-            val quantidade = readLine()?.toInt() ?: 0
-            selecionaQuantidadeDoProduto(listaPaes[escolha - 1], quantidade, precoPaes[escolha - 1])
-        } else {
-            menuPrincipal()
-        }
-    } while (escolha != 0)
-}
-
-fun menuDoces() {
-    val menuDoces = listOf("Bolo", "Doce de milho", "Torta de Nozes")
-    val precoDoces = listOf(10.0, 12.0, 15.0)
-    try {
-        do {
-            println("Escolha o item")
-            for (i in menuDoces.indices) {
-                println("${i + 1} - ${menuDoces[i]}......R$ ${precoDoces[i]}")
-            }
-            println("0.........Voltar")
-
-            val escolha: Int = readLine()?.toInt() ?: 0
-
-            if (escolha != 0) {
-                print("Qual a quantidade? ")
-                val quantidade = readLine()?.toInt() ?: 0
-                selecionaQuantidadeDoProduto(menuDoces[escolha - 1], quantidade, precoDoces[escolha - 1])
-            } else {
-                menuPrincipal()
-            }
-        } while (escolha != 0)
-    } catch (e: Exception) {
-        println("Ocorreu um erro inesperado, por favor tente novamente.")
-        menuDoces()
-    }
-}
-
-fun menuSalgados() {
-    val listaSalgados = listOf("Coxinha", "Misto quente", "Empadinha")
-    val precoSalgados = listOf(4.0, 8.0, 3.0)
-
-    do {
-        println("Escolha o item")
-        for (i in listaSalgados.indices) {
-            println("${i + 1} - ${listaSalgados[i]}......R$ ${precoSalgados[i]}")
-        }
-        println("0.........Voltar")
-
-        val escolha: Int = readLine()?.toInt() ?: 0
-
-        if (escolha != 0) {
-            print("Qual a quantidade? ")
-            val quantidade = readLine()?.toInt() ?: 0
-            selecionaQuantidadeDoProduto(listaSalgados[escolha - 1], quantidade, precoSalgados[escolha - 1])
-        } else {
-            menuPrincipal()
-        }
-    } while (escolha != 0)
-}
-
-fun selecionaQuantidadeDoProduto(produto: String, quantidade: Int, precoUnitario: Double): MutableList<String> {
-    val subTotal = quantidade * precoUnitario
-    val item = itemComanda(produto, quantidade, precoUnitario, subTotal)
-    itensComanda.add(item)
-    total += subTotal
-    return itensComanda
-}
-
-fun itemComanda(
-    produto: String,
-    quantidade: Int,
-    valorUnitario: Double,
-    subTotal: Double,
-): String = "\n${itensComanda.size.inc()}$LINHA$produto$LINHA$quantidade${LINHA}R$$valorUnitario${LINHA}R$$subTotal\n"
-
-fun finalizarCompra() {
-    if (itensComanda.isEmpty()) {
-        print("Deseja mesmo cancelar? (S/N) ")
-        if (readLine().toString() == "S") {
-            exitProcess(0)
-        } else {
-            menuPrincipal()
-        }
-    } else {
-        finalizacaoDaCompra()
-    }
-}
-
-fun finalizacaoDaCompra() {
-    println("Se possui cupom de desconto, informe aqui: ")
-    val cupomDeDesconto: String = readLine() ?: ""
-    if (cupomDeDesconto.isNotEmpty()) {
-        when (cupomDeDesconto) {
-            "5PADOCA" -> total -= (total * 0.05)
-            "10PADOCA" -> total -= (total * 0.1)
-            "5OFF" -> total -= 5
+        var opcaoMenuPrincipal: Int = readlnOrNull()?.toInt() ?: 0
+        when (opcaoMenuPrincipal) {
+            1 -> menuPaes()
+            2 -> menuDoces()
+            3 -> menuSalgados()
+            0 -> finalizarCompra()
             else -> "Opcão inválida"
         }
     }
-    impressaoDaComanda()
+
+    private fun menuPaes() {
+        val paes = Produto(listOf("Pão Francês", "Pão e Leite", "Pão de milho"), listOf(1.0, 2.0, 3.0))
+        exibirProdutos(paes.nome, paes.preco, 1)
+    }
+
+    private fun menuDoces() {
+        val doces = Produto(listOf("Bolo", "Doce de milho", "Torta de Nozes"), listOf(10.0, 12.0, 15.0))
+        exibirProdutos(doces.nome, doces.preco, 2)
+    }
+
+    private fun menuSalgados() {
+        val salgados = Produto(listOf("Coxinha", "Misto quente", "Empadinha"), listOf(4.0, 8.0, 3.0))
+        exibirProdutos(salgados.nome, salgados.preco, 3)
+    }
+
+    private fun exibirProdutos(produtos: List<String>, precos: List<Double>, opcao: Int) {
+        try {
+            do {
+                println("Escolha o item")
+                for (i in produtos.indices) {
+                    println("${i + 1} - ${produtos[i]}......R$ ${precos[i]}")
+                }
+                println("0.........Voltar")
+
+                val escolha: Int = readlnOrNull()?.toInt() ?: 0
+
+                if (escolha != 0) {
+                    print("Qual a quantidade? ")
+                    val quantidade = readlnOrNull()?.toInt() ?: 0
+                    selecionaQuantidadeDoProduto(produtos[escolha - 1], quantidade, precos[escolha - 1])
+                } else {
+                    menuPrincipal()
+                }
+            } while (escolha != 0)
+        } catch (e: Exception) {
+            println("Ocorreu um erro inesperado, por favor tente novamente.")
+            when (opcao) {
+                1 -> menuPaes()
+                2 -> menuDoces()
+                3 -> menuSalgados()
+            }
+        }
+    }
+
+    private fun selecionaQuantidadeDoProduto(produto: String, quantidade: Int, precoUnitario: Double): MutableList<String> {
+        val subTotal = quantidade * precoUnitario
+        val item = itemComanda(produto, quantidade, precoUnitario, subTotal)
+        itensComanda.add(item)
+        total += subTotal
+        return itensComanda
+    }
+
+    private fun itemComanda(produto: String, quantidade: Int, valorUnitario: Double, subTotal: Double): String =
+        "\n${itensComanda.size.inc()}$LINHA$produto$LINHA$quantidade${LINHA}R$$valorUnitario${LINHA}R$$subTotal\n"
+
+    private fun finalizarCompra() {
+        if (itensComanda.isEmpty()) {
+            print("Deseja mesmo cancelar? (S/N) ")
+            if (readlnOrNull().toString() == "S") {
+                exitProcess(0)
+            } else {
+                menuPrincipal()
+            }
+        } else {
+            finalizacaoDaCompra()
+        }
+    }
+
+    private fun finalizacaoDaCompra() {
+        println("Se possui cupom de desconto, informe aqui, senão pressione enter: ")
+        val cupomDeDesconto: String = readlnOrNull() ?: ""
+        if (cupomDeDesconto.isNotEmpty()) {
+            when (cupomDeDesconto) {
+                "5PADOCA" -> total -= (total * 0.05)
+                "10PADOCA" -> total -= (total * 0.1)
+                "5OFF" -> total -= 5
+                else -> "Opcão inválida"
+            }
+        }
+        impressaoDaComanda()
+    }
+
+    private fun impressaoDaComanda() {
+        println("====================Comanda E-padoca=======================")
+        println(DIVISOR)
+        println("item.......Produto..........Qtd.......Valor...........Total")
+        println(DIVISOR)
+        itensComanda.forEach {
+            print(it)
+        }
+        println("\n" + DIVISOR)
+        println("Total =============================================>R$ $total")
+        println("=====================VOLTE SEMPRE ^-^======================")
+    }
+
+    companion object {
+        private const val LINHA = "........"
+        private const val DIVISOR = "==========================================================="
+    }
 }
 
-fun impressaoDaComanda() {
-    println("====================Comanda E-padoca=======================")
-    println(DIVISOR)
-    println("item.......Produto..........Qtd.......Valor...........Total")
-    println(DIVISOR)
-    itensComanda.forEach {
-        print(it)
-    }
-    println("\n" + DIVISOR)
-    println("Total =============================================>R$ $total")
-    println("=====================VOLTE SEMPRE ^-^======================")
+fun main() {
+    println("Bem vindo a E-Padoca!")
+    val ePadoca = EPadoca()
+    ePadoca.menuPrincipal()
 }
