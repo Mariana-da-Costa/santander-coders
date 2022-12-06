@@ -1,0 +1,1 @@
+data class Produto(val lista: MutableList<Triple<Int, String, Int>>, val descricao: MutableList<String>)

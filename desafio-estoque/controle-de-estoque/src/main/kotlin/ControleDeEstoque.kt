@@ -3,7 +3,7 @@ import javax.naming.LimitExceededException
 import kotlin.system.exitProcess
 
 class ControleDeEstoque {
-    private var listaDeProdutos = mutableListOf<Triple<Int, String, Int>>()
+    private var listaDeProdutos = Produto(mutableListOf(), mutableListOf())
     private val opcoesDoMenu = """
     1 - ADICIONAR ITEM
     2 - EDITAR ITEM
@@ -33,7 +33,7 @@ class ControleDeEstoque {
 
     private fun adicionarItem() {
         val qtd: Int
-        val index = listaDeProdutos.size.inc()
+        val index = listaDeProdutos.lista.size.inc()
         print("Informe o nome do produto: ")
         try {
             val produto = readlnOrNull().toString()
@@ -43,7 +43,7 @@ class ControleDeEstoque {
                 throw LimitExceededException("LimiteEstoqueMaxException")
             } else {
                 val item = item(index, produto, qtd)
-                listaDeProdutos.add(Triple(index, item, qtd))
+                listaDeProdutos.lista.add(Triple(index, item, qtd))
                 menu()
             }
         } catch (e: LimitExceededException) {
@@ -57,13 +57,13 @@ class ControleDeEstoque {
     }
 
     private fun editarItem() {
-        if (listaDeProdutos.isNotEmpty()) {
+        if (listaDeProdutos.lista.isNotEmpty()) {
             println("Qual desses itens deseja editar? ")
             exibirListaDeProdutos(false)
             print("\n Digite o ID do produto que deseja editar: ")
             try {
                 val index = readlnOrNull()?.toInt() ?: -1
-                println("\nVocê deseja alterar o item ${listaDeProdutos[index - 1].first}")
+                println("\nVocê deseja alterar o item ${listaDeProdutos.lista[index - 1].first}")
                 print("Informe o novo nome do produto: ")
                 val novoNome = readlnOrNull().toString()
                 print("Informe a nova quantidade: ")
@@ -71,9 +71,9 @@ class ControleDeEstoque {
                 if (novaQuantidade > 999) {
                     throw LimitExceededException("LimiteEstoqueMaxException")
                 } else {
-                    val itemEditado = item(listaDeProdutos[index - 1].first, novoNome, novaQuantidade)
-                    listaDeProdutos[index - 1] = Triple(index, itemEditado, novaQuantidade)
-                    println("Produto alterado com sucesso: ${listaDeProdutos[index - 1].second}")
+                    val itemEditado = item(listaDeProdutos.lista[index - 1].first, novoNome, novaQuantidade)
+                    listaDeProdutos.lista[index - 1] = Triple(index, itemEditado, novaQuantidade)
+                    println("Produto alterado com sucesso: ${listaDeProdutos.lista[index - 1].second}")
                 }
             } catch (e: LimitExceededException) {
                 println(e.message)
@@ -94,8 +94,8 @@ class ControleDeEstoque {
     }
 
     private fun exibirProdutosEmEstoque() {
-        if (listaDeProdutos.isNotEmpty()) {
-            val produtosEmEstoque = listaDeProdutos.filter { it.third > 0 }
+        if (listaDeProdutos.lista.isNotEmpty()) {
+            val produtosEmEstoque = listaDeProdutos.lista.filter { it.third > 0 }
             println(CABECALHO)
             produtosEmEstoque.forEach { println(it.second) }
         } else {
@@ -105,9 +105,9 @@ class ControleDeEstoque {
     }
 
     private fun exibirListaDeProdutos(exibirMenu: Boolean) {
-        if (listaDeProdutos.isNotEmpty()) {
+        if (listaDeProdutos.lista.isNotEmpty()) {
             println(CABECALHO)
-            listaDeProdutos.forEach { println(it.second) }
+            listaDeProdutos.lista.forEach { println(it.second) }
         } else {
             println(LISTA_VAZIA)
         }
@@ -123,7 +123,7 @@ class ControleDeEstoque {
     private fun gravandoLista(exibirMenu: Boolean) {
         val arquivo = File("listaDeProdutos.txt")
         arquivo.writeText(LISTA_VAZIA + "\n\n")
-        listaDeProdutos.forEach { arquivo.appendText("${it.second}\n") }
+        listaDeProdutos.lista.forEach { arquivo.appendText("${it.second}\n") }
         println(LISTA_SALVA)
         if (exibirMenu) menu()
     }
