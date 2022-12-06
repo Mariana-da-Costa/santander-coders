@@ -3,13 +3,14 @@ import javax.naming.LimitExceededException
 import kotlin.system.exitProcess
 
 class ControleDeEstoque {
-    private var listaDeProdutos = Produto(mutableListOf(), mutableListOf())
+    private var listaDeProdutos = Produto(mutableListOf())
     private val opcoesDoMenu = """
     1 - ADICIONAR ITEM
     2 - EDITAR ITEM
     3 - EXIBIR ITENS EM ESTOQUE
     4 - EXIBIR TODOS OS ITENS
     5 - GRAVAR ITENS NO TXT
+    6 - EXIBIR ITENS COM ESTOQUE BAIXO
     0 - FECHAR SISTEMA
 """
 
@@ -23,6 +24,7 @@ class ControleDeEstoque {
                 3 -> exibirProdutosEmEstoque()
                 4 -> exibirListaDeProdutos(true)
                 5 -> gravandoLista(true)
+                6 -> exibirProdutosComEstoqueBaixo()
                 0 -> fecharPrograma()
             }
         } catch (e: Exception) {
@@ -98,6 +100,17 @@ class ControleDeEstoque {
             val produtosEmEstoque = listaDeProdutos.lista.filter { it.third > 0 }
             println(CABECALHO)
             produtosEmEstoque.forEach { println(it.second) }
+        } else {
+            println(LISTA_VAZIA)
+        }
+        menu()
+    }
+
+    private fun exibirProdutosComEstoqueBaixo(){
+        if (listaDeProdutos.lista.isNotEmpty()) {
+            val produtosComEstoqueBaixo = listaDeProdutos.lista.filter { it.third in 0..4 }
+            println(CABECALHO)
+            produtosComEstoqueBaixo.forEach { println(it.second) }
         } else {
             println(LISTA_VAZIA)
         }
