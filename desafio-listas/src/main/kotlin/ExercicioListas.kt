@@ -1,31 +1,56 @@
+data class Node<T>(var value: T, var next: Node<T>?)
 
-//Enunciado
-//Dado a estrutura de lista ligada que construímos em sala, adicionar:
-//Método de busca por um valor específico
-//Otimização para termos a adição de um nó ao final de O(1), ou seja,
-//será necessário manter uma referência para o último elemento da lista
+data class LinkedList<T>(var head: Node<T>? = null) {
+    private var ultimo: Node<T>? = null
 
-data class Node<T>(
-    var value: T,
-    var next: Node<T>?
-)
-
-data class LinkedList2<T>(
-    var head: Node<T>? = null
-) {
     fun add(value: T) {
         val newNode = Node(value = value, null)
 
         if (head == null) {
             head = newNode
+            ultimo = newNode
             return
         } else {
-            var current = head
-            while (current?.next != null) {
-                current = current.next
-            }
+            val current = ultimo
             current?.next = newNode
+            ultimo = newNode
         }
+    }
+
+    fun obtemNode(searchedValue: T): Node<T>? {
+        var current = head
+        if (current == null) {
+            println("Lista vazia")
+            return null
+        }
+        do {
+            if (current?.value == searchedValue) {
+                return current
+            }
+            current = current?.next
+        } while (current != null)
+
+        println("O item não existe na lista")
+        return null
+    }
+
+    fun obtemIndice(searchedValue: T): Int? {
+        var current = head
+        var currentIndex = 0
+        if (current == null) {
+            println("Lista vazia")
+            return null
+        }
+        do {
+            if (current?.value == searchedValue) {
+                return currentIndex
+            }
+            current = current?.next
+            currentIndex++
+        } while (current != null)
+
+        println("O item não existe na lista")
+        return null
     }
 
     fun remove(value: T): Boolean {
@@ -36,7 +61,7 @@ data class LinkedList2<T>(
         var current = head?.next
         var previous = head
 
-        while(current != null && current.value != value) {
+        while (current != null && current.value != value) {
             previous = current
             current = current.next
         }
@@ -56,7 +81,7 @@ data class LinkedList2<T>(
             return
         }
 
-        while(current != null) {
+        while (current != null) {
             println(current.value)
             current = current.next
         }
@@ -65,4 +90,23 @@ data class LinkedList2<T>(
     fun isEmpty(): Boolean {
         return head == null
     }
+}
+
+fun main() {
+    val lista = LinkedList<Int>()
+    lista.add(12)
+    lista.add(28)
+    lista.add(21)
+    lista.add(33)
+    lista.add(34)
+    lista.add(35)
+    lista.show()
+    lista.remove(12)
+    lista.show()
+
+    val indicePesquisado = lista.obtemIndice(3)
+    val resultadoNode = lista.obtemNode(28)
+
+    println(resultadoNode)
+    println(indicePesquisado)
 }
