@@ -1,7 +1,24 @@
 import logica.LeitorDeTransacoes
+import logica.Writer
+import model.Banco
 
 fun main() {
-    val leitor = LeitorDeTransacoes()
+    val banco = Banco("SANTANDER")
+    val bankReader = LeitorDeTransacoes(banco)
     val path = "utils/operacoes.csv"
-    leitor.readCsv(path)
+    val writerCsv = Writer()
+
+    bankReader.obterCsv(path)
+    bankReader.sort(path).forEach {
+        println(it)
+    }
+
+    bankReader.obtemClientesESaldos(path).forEach {
+        println(it)
+    }
+
+    writerCsv.apply {
+        val pathDeals = "utils/deals.csv"
+        writeCsv(pathDeals, bankReader.obtemClientesESaldos(path))
+    }
 }
