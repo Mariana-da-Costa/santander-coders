@@ -18,7 +18,7 @@ fun main() {
     }
 
     writerCsv.apply {
-        val pathDeals = "utils/deals.csv"
+        val pathDeals = "utils/operacoesProcessadas.csv"
         writeCsv(pathDeals, bankReader.obtemClientesESaldos(path))
     }
 }
